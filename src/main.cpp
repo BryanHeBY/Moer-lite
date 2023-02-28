@@ -37,4 +37,5 @@ int main(int argc, char **argv) {
   }
   camera->film->saveHDR(
       fetchRequired<std::string>(json["output"], "filename").c_str());
+  return 0;
 }
