@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "output/two-spolLights.hdr"
+    "filename" : "output/one-spolLights.hdr"
   },
   "sampler" : {
     "type" : "independent",
@@ -52,11 +52,6 @@
       {
         "type" : "spotLight",
         "position" : [3, 2, 0],
-        "energy" : [25, 25, 25]
-      },
-      {
-        "type" : "spotLight",
-        "position" : [-3, 2, 0],
         "energy" : [25, 25, 25]
       }
     ]

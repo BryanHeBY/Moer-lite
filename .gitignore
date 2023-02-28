@@ -3,3 +3,6 @@
 /target
 /scenes
 .vscode
+.idea
+output
+/lecture
