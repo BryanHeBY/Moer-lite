@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "cornell-18.hdr"
+    "filename" : "bunny-2.hdr"
   },
   "sampler" : {
     "type" : "independent",
@@ -45,8 +45,7 @@
         "edge0" : [0, 0, 20],
         "edge1" : [20,0,0],
         "material" : {
-          "type" : "matte",
-          "albedo" : [0.8, 0.8, 0.8]
+          "type" : "mirror"
         }
       }   
     ],
