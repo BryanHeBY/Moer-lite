@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "output/bunny.hdr"
+    "filename" : "output/bunny-1.hdr"
   },
   "sampler" : {
     "type" : "independent",
