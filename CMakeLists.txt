@@ -30,6 +30,7 @@ add_executable(Moer
   src/FunctionLayer/Acceleration/EmbreeBVH.cpp
   src/FunctionLayer/Integrator/NormalIntegrator.cpp
   src/FunctionLayer/Integrator/DirectIntegrator.cpp
+  src/FunctionLayer/Integrator/WhittedIntegrator.cpp
   src/FunctionLayer/Camera/Camera.cpp
   src/FunctionLayer/Camera/Pinhole.cpp
   src/FunctionLayer/Scene/Scene.cpp
@@ -84,3 +85,16 @@ add_custom_command(TARGET Moer POST_BUILD
 
 target_link_libraries(Moer PUBLIC embree3)
 target_link_libraries(Moer PUBLIC tinyobjloader)
+
+if(APPLE)
+  execute_process(
+    COMMAND uname -m
+    RESULT_VARIABLE result
+    OUTPUT_VARIABLE MOER_OSX_NATIVE_ARCHITECTURE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+  )
+
+  if(${MOER_OSX_NATIVE_ARCHITECTURE} STREQUAL "arm64")
+    set_target_properties(Moer PROPERTIES LINK_FLAGS "-undefined dynamic_lookup")
+  endif()
+endif()
