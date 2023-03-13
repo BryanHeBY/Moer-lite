@@ -15,17 +15,14 @@ Parallelogram::Parallelogram(const Json &json) : Shape(json) {
   vertices[1] = vertices[0] + edge0;
   vertices[2] = vertices[1] + edge1;
   vertices[3] = vertices[0] + edge1;
-  pMin = pMax = vertices[0]; // 初始化
-  for (int dim = 0; dim < 3; ++dim) {
-    for (int i = 1; i < 4; ++i) {
-      pMin[dim] = std::min(pMin[dim], vertices[i][dim]);
-      pMax[dim] = std::max(pMax[dim], vertices[i][dim]);
-    }
+
+  for (int i = 0; i < 4; ++i) {
+    boundingBox.Expand(vertices[i]);
   }
 }
 
-bool Parallelogram::rayIntersectShape(const Ray &ray, float *distance,
-                                      int *primID, float *u, float *v) const {
+bool Parallelogram::rayIntersectShape(Ray &ray, int *primID, float *u,
+                                      float *v) const {
   Point3f origin = ray.origin;
   Vector3f direction = ray.direction;
   Vector3f paralNormal = normalize(cross(edge0, edge1));
@@ -53,7 +50,7 @@ bool Parallelogram::rayIntersectShape(const Ray &ray, float *distance,
     v_ *= -1;
 
   if (0.f <= u_ && u_ <= 1.f && 0.f <= v_ && v_ <= 1.f) {
-    *distance = t;
+    ray.tFar = t;
     *primID = 0;
     *u = u_;
     *v = v_;

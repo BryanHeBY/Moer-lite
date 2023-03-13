@@ -9,7 +9,6 @@ Cube::Cube(const Json &json) : Shape(json) {
   boxMax = Point3f{1.f, 1.f, 1.f};
 
   // 构建AABB
-  pMin = pMax = transform.toWorld(boxMin);
   for (int i = 0; i < 8; ++i) {
     Point3f p;
     p[0] = (i & 0b100) ? boxMax[0] : boxMin[0];
@@ -18,23 +17,21 @@ Cube::Cube(const Json &json) : Shape(json) {
     p = transform.toWorld(p);
 
     for (int j = 0; j < 3; ++j) {
-      pMin[j] = std::min(pMin[j], p[j]);
-      pMax[j] = std::max(pMax[j], p[j]);
+      boundingBox.Expand(p);
     }
   }
 
   // 在计算时，所有计算都是在局部坐标系内完成的，因此这里只对boxMin和boxMax做scale操作
   Matrix4f scale = transform.scale;
-  vecmat::vec4f min{boxMin[0], boxMin[0], boxMin[0], 1.f},
-      max{boxMax[0], boxMax[0], boxMax[0], 1.f};
+  vecmat::vec4f min{boxMin[0], boxMin[1], boxMin[2], 1.f},
+      max{boxMax[0], boxMax[1], boxMax[2], 1.f};
   min = scale * min, max = scale * max;
   min /= min[3], max /= max[3];
   boxMin = Point3f{min[0], min[1], min[2]};
   boxMax = Point3f{max[0], max[1], max[2]};
 }
 
-bool Cube::rayIntersectShape(const Ray &ray, float *distance, int *primID,
-                             float *u, float *v) const {
+bool Cube::rayIntersectShape(Ray &ray, int *primID, float *u, float *v) const {
   // 我们将shape的旋转和平移的逆变换应用到光线上，在不改变两者的相对位置的情况下
   // 在局部坐标系中完成求交计算，局部坐标系中cube一直是Axis-aligned box
   Point3f origin = ray.origin;
@@ -90,13 +87,13 @@ bool Cube::rayIntersectShape(const Ray &ray, float *distance, int *primID,
   if (ray.tNear < tFar && tFar < ray.tFar) {
     Point3f hitpoint = origin + tFar * direction;
     compute(hitpoint, primID, u, v);
-    *distance = tFar;
+    ray.tFar = tFar;
     hit = true;
   }
   if (ray.tNear < tNear && tNear < ray.tFar) {
     Point3f hitpoint = origin + tNear * direction;
     compute(hitpoint, primID, u, v);
-    *distance = tNear;
+    ray.tFar = tNear;
     hit = true;
   }
   return hit;

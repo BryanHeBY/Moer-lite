@@ -1,15 +1,22 @@
 #include "Scene.h"
 #include <FunctionLayer/Acceleration/EmbreeBVH.h>
+#include <FunctionLayer/Acceleration/Linear.h>
 #include <FunctionLayer/Light/AreaLight.h>
 #include <ResourceLayer/Factory.h>
 
 Scene::Scene(const Json &json) {
-  //* 初始化加速结构
-  acceleration = std::make_shared<EmbreeBVH>();
+  //* 初始化加速结构，默认使用embree
+  std::string accelerationType =
+      fetchOptional<std::string>(json, "acceleration", "embree");
+  Acceleration::setAccelerationType(accelerationType);
+  acceleration = Acceleration::createAcceleration();
+
   //* 添加几何体
+  int geomID = 0;
   auto shapes = json["shapes"];
   for (int i = 0; i < shapes.size(); ++i) {
     auto shape = Factory::construct_class<Shape>(shapes[i]);
+    shape->geometryID = geomID++;
     acceleration->attachShape(shape);
   }
   //* 添加光源
@@ -28,6 +35,7 @@ Scene::Scene(const Json &json) {
     if (light->type == LightType::AreaLight) {
       auto shape = std::static_pointer_cast<AreaLight>(light)->shape;
       shape->light = light;
+      shape->geometryID = geomID++;
       acceleration->attachShape(shape);
     }
   }
@@ -39,7 +47,7 @@ Scene::Scene(const Json &json) {
   acceleration->build();
 }
 
-std::optional<Intersection> Scene::rayIntersect(const Ray &ray) const {
+std::optional<Intersection> Scene::rayIntersect(Ray &ray) const {
   return acceleration->rayIntersect(ray);
 }
 
