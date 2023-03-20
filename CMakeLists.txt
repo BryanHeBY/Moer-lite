@@ -9,6 +9,7 @@ if(MSVC)
   add_compile_options("/MP")
   add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
   add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+  add_definitions(-D_USE_MATH_DEFINES)
 endif(MSVC)
 
 if(WIN32)
@@ -58,7 +59,7 @@ add_executable(Moer
   src/ResourceLayer/Image.cpp
   src/ResourceLayer/Mesh.cpp
   src/ResourceLayer/FileUtil.cpp
-)
+        src/FunctionLayer/Shape/Disk.cpp src/FunctionLayer/Shape/Disk.h src/FunctionLayer/Shape/Cone.cpp src/FunctionLayer/Shape/Cone.h src/FunctionLayer/Shape/Cylinder.cpp src/FunctionLayer/Shape/Cylinder.h src/FunctionLayer/Integrator/UVIntegrator.cpp src/FunctionLayer/Integrator/UVIntegrator.h src/FunctionLayer/Acceleration/BVH.cpp src/FunctionLayer/Acceleration/BVH.h)
 
 target_include_directories(Moer PUBLIC ./externals)
 target_include_directories(Moer PUBLIC ./src)
@@ -79,6 +80,7 @@ if(APPLE)
   set(LIBS_PATH ${PROJECT_SOURCE_DIR}/libs/macos)
   set(EMBREE_DLL ${LIBS_PATH}/libembree3.3.dylib ${LIBS_PATH}/libtbb.12.2.dylib)
 endif()
+
 
 target_link_directories(Moer PUBLIC ${LIBS_PATH})
 target_link_directories(Moer PUBLIC ${PROJECT_SOURCE_DIR}/target/lib)

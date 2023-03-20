@@ -37,12 +37,13 @@ Moer-lite的框架基于Moer主干：https://github.com/NJUCG/Moer .
   - 修改了Acceleration求交的接口，现在每个加速结构需要实现bool Acceleration::rayIntersect(Ray &ray, int *geomID, int *primID, float *u, float *v) const函数
 - 2023-3-11
   - 增加了Octree八叉树，实现八叉树需要你实现以下两个方法
-    - std::shared_ptr<OctreeNode> OctreeAcceleration::recursiveBuild
-    - bool OctreeAcceleration::rayIntersect
+    - std::shared_ptr<OctreeNode> Octree::recursiveBuild
+    - bool Octree::rayIntersect
   - 增加了`examples/lab1-test0`测试场景，用于测试加速结构的效率
   - 目前可以修改配置文件中scene的acceleration参数用来测试不同的加速结构，现在可选的参数有`embree`（default）、`linear`（没有任何求交加速）、`octree`（需要实现）
   - 修改了面光源存在时运行发生段错误
-
+- 2023-3-18
+  lab1有关内容更新 具体请看实验手册
 ## TODO
 - 对mesh和sphere实现表面采样（目前只有parallelogram可以配置为面光源）
 - 加速环境光的采样
