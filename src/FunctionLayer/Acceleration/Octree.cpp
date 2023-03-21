@@ -38,8 +38,6 @@ Octree::recursiveBuild(const AABB &aabb,
       if (shapes[idx]->getAABB().Overlap(subBoxes[i]))
         subBufferes[i].push_back(idx);
 
-  int overallSubBoxIdx = -1;
-
   for (int i = 0; i < 8; i++) {
     if (subBufferes[i].size() == primIdxBuffer.size())
       return recursiveBuild(subBoxes[i], subBufferes[i]);
