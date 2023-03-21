@@ -8,7 +8,48 @@ bool Cone::rayIntersectShape(Ray &ray, int *primID, float *u, float *v) const {
     //* 3.检验交点是否在圆锥范围内
     //* 4.更新ray的tFar,减少光线和其他物体的相交计算次数
     //* Write your code here.
-    return false;
+
+    float tNear = ray.tNear, tFar = ray.tFar;
+    Ray trans_ray = transform.inverseRay(ray);
+
+    Vector3f CO = trans_ray.origin - Point3f{0.f, 0.f, height};
+    float COz = CO[2];
+    float Dz = trans_ray.direction[2];
+
+    float sqr_cosTheta = cosTheta * cosTheta;
+    float A = Dz * Dz - sqr_cosTheta;
+    float B = 2 * (Dz * COz - dot(trans_ray.direction, CO) * sqr_cosTheta);
+    float C = COz * COz - dot(CO, CO) * sqr_cosTheta;
+
+    float t0, t1;
+    bool solution_exist = Quadratic(A, B, C, &t0, &t1);
+    
+    if(!solution_exist)
+        return false;
+
+    auto check_intersect = [&](float t) {
+        if(t < tNear || t > tFar)
+            return false;
+
+        Point3f p = trans_ray.at(t);
+
+        if(p[2] < 0.f || p[2] > height)
+            return false;
+
+        float phi = std::atan2(p[1], p[0]);
+        if(phi < 0.f) phi += 2 * fm::pi_f;
+        if(phi > phiMax)
+            return false;
+
+        ray.tFar = t;
+        *primID = 0;
+        *u = phi / phiMax;
+        *v = p[2] / height;
+        return true;
+    };
+
+    if(check_intersect(t0)) return true;
+    else return check_intersect(t1);
 }
 
 void Cone::fillIntersection(float distance, int primID, float u, float v, Intersection *intersection) const {
@@ -19,6 +60,21 @@ void Cone::fillIntersection(float distance, int primID, float u, float v, Inters
     //* Write your code here.
     /// ----------------------------------------------------
 
+    float phi = u * phiMax;
+    float pz = v * height;
+
+    Point3f M {
+        radius * std::cos(phi), radius * std::sin(phi), pz
+    };
+    Vector3f CM = M - Point3f{0.f, 0.f, height};
+    float CM_N = std::sqrt(dot(CM, CM));
+    Point3f K {
+        0.f, 0.f, height - CM_N / cosTheta
+    };
+    Vector3f KM = M - K;
+
+    intersection->position = transform.toWorld(M);
+    intersection->normal = transform.toWorld(normalize(KM));
 
     intersection->shape = this;
     intersection->distance = distance;
