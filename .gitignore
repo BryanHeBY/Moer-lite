@@ -4,7 +4,8 @@
 /scenes
 .vscode
 .idea
-output
+/output
+/report
 /lecture
 /examples/acceleration-test
 /cmake-build-debug

@@ -8,7 +8,33 @@ bool Disk::rayIntersectShape(Ray &ray, int *primID, float *u, float *v) const {
     //* 4.检验交点是否在圆环内
     //* 5.更新ray的tFar,减少光线和其他物体的相交计算次数
     //* Write your code here.
-    return false;
+
+    float tNear = ray.tNear, tFar = ray.tFar;
+    Ray trans_ray = transform.inverseRay(ray);
+    
+    if(trans_ray.direction[2] == 0)
+        return false;
+    
+    float t = (0 - trans_ray.origin[2]) / trans_ray.direction[2];
+    if(t < tNear || t > tFar)
+        return false;
+    
+    Point3f p = trans_ray.at(t);
+    float rho = std::sqrt(p[0] * p[0] + p[1] * p[1]);
+
+    if(rho < innerRadius || rho > radius)
+        return false;
+
+    float phi = std::atan2(p[1], p[0]);
+    if(phi < 0.f) phi += 2 * fm::pi_f;
+    if(phi > phiMax)
+        return false;
+
+    ray.tFar = t;
+    *primID = 0;
+    *u = phi / phiMax;
+    *v = (rho - innerRadius) / (radius - innerRadius);
+    return true;
 }
 
 void Disk::fillIntersection(float distance, int primID, float u, float v, Intersection *intersection) const {
@@ -18,7 +44,16 @@ void Disk::fillIntersection(float distance, int primID, float u, float v, Inters
     //* 2.位置信息可以根据uv计算出，同样需要变换
     //* Write your code here.
     /// ----------------------------------------------------
-
+    
+    float phi = u * phiMax;
+    float rho = v * (radius - innerRadius) + innerRadius;
+    
+    Point3f localSpacePosition{
+        rho * std::cos(phi), rho * std::sin(phi), 0.f
+    };
+    Vector3f localSpaceNormal{0.f, 0.f, 1.f};
+    intersection->position = transform.toWorld(localSpacePosition);
+    intersection->normal = transform.toWorld(localSpaceNormal);
 
     intersection->shape = this;
     intersection->distance = distance;

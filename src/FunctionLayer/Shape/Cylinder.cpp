@@ -7,7 +7,46 @@ bool Cylinder::rayIntersectShape(Ray &ray, int *primID, float *u, float *v) cons
     //* 3.检验交点是否在圆柱范围内
     //* 4.更新ray的tFar,减少光线和其他物体的相交计算次数
     //* Write your code here.
-    return false;
+
+    float tNear = ray.tNear, tFar = ray.tFar;
+    Ray trans_ray = transform.inverseRay(ray);
+
+    float ox = trans_ray.origin[0], dx = trans_ray.direction[0];
+    float oy = trans_ray.origin[1], dy = trans_ray.direction[1];
+
+    float A = dx * dx + dy * dy;
+    float B = 2 * (dx * ox + dy * oy);
+    float C = ox * ox + oy * oy - radius * radius;
+
+    float t0, t1;
+    bool solution_exist = Quadratic(A, B, C, &t0, &t1);
+    
+    if(!solution_exist)
+        return false;
+
+    auto check_intersect = [&](float t) {
+        if(t < tNear || t > tFar)
+            return false;
+
+        Point3f p = trans_ray.at(t);
+
+        if(p[2] < 0.f || p[2] > height)
+            return false;
+
+        float phi = std::atan2(p[1], p[0]);
+        if(phi < 0.f) phi += 2 * fm::pi_f;
+        if(phi > phiMax)
+            return false;
+
+        ray.tFar = t;
+        *primID = 0;
+        *u = phi / phiMax;
+        *v = p[2] / height;
+        return true;
+    };
+
+    if(check_intersect(t0)) return true;
+    else return check_intersect(t1);
 }
 
 void Cylinder::fillIntersection(float distance, int primID, float u, float v, Intersection *intersection) const {
@@ -18,6 +57,17 @@ void Cylinder::fillIntersection(float distance, int primID, float u, float v, In
     //* Write your code here.
     /// ----------------------------------------------------
 
+    float phi = u * phiMax;
+    float pz = v * height;
+
+    Point3f localSpacePosition{
+        radius * std::cos(phi), radius * std::sin(phi), pz
+    };
+    Vector3f localSpaceNormal{
+        radius * std::cos(phi), radius * std::sin(phi), 0.f
+    };
+    intersection->position = transform.toWorld(localSpacePosition);
+    intersection->normal = transform.toWorld(localSpaceNormal);
 
     intersection->shape = this;
     intersection->distance = distance;

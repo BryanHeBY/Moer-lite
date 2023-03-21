@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "monkey-bvh.png"
+    "filename" : "output/monkey-bvh.png"
   },
   "sampler" : {
     "type" : "independent",

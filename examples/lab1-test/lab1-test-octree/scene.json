@@ -1,10 +1,6 @@
 {
   "output" : {
-<<<<<<< HEAD:examples/lab1-test0/scene.json
-    "filename" : "output/acc-test-2.png"
-=======
-    "filename" : "monkey-octree.png"
->>>>>>> 9e52707220d9d3c6a57aea1e5eb228c235c7e354:examples/lab1-test/lab1-test-octree/scene.json
+    "filename" : "output/monkey-octree.png"
   },
   "sampler" : {
     "type" : "independent",

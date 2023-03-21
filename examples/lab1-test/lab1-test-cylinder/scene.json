@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "cylinder-normal.png"
+    "filename" : "output/cylinder-normal.png"
   },
   "sampler" : {
     "type" : "independent",

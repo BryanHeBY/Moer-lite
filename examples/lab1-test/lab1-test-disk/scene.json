@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "disk-normal.png"
+    "filename" : "output/disk-normal.png"
   },
   "sampler" : {
     "type" : "independent",
