@@ -18,7 +18,7 @@ protected:
   std::unique_ptr<OctreeNode> root;
   std::unique_ptr<OctreeNode>
   recursiveBuild(const AABB &aabb, const std::vector<int> &primIdxBuffer);
-  bool recursiveRayIntersect(const std::unique_ptr<OctreeNode> &node,
-                                     Ray &ray, int *geomID, int *primID,
-                                     float *u, float *v) const;
+  bool recursiveRayIntersect(const std::unique_ptr<OctreeNode> &node, Ray &ray,
+                             int *geomID, int *primID, float *u,
+                             float *v) const;
 };
