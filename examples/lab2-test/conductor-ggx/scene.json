@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "conductor-ggx.hdr"
+    "filename" : "output/conductor-ggx.hdr"
   },
   "sampler" : {
     "type" : "independent",

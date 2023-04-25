@@ -1,6 +1,6 @@
 {
     "output" : {
-      "filename" : "dielectric-beckmann.hdr"
+      "filename" : "output/dielectric-beckmann.hdr"
     },
     "sampler" : {
       "type" : "independent",

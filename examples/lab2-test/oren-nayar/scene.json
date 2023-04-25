@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "oren-nayar.hdr"
+    "filename" : "output/oren-nayar.hdr"
   },
   "sampler" : {
     "type" : "independent",
