@@ -11,9 +11,9 @@ public:
     // TODO
     // 根据公式即可
     float cos_theta = whLocal[1];
-    float tan_theta = std::sqrt(1.f / (cos_theta * cos_theta) - 1.f);
-    float a = alpha[0];
-    return a * a / (PI * std::pow(cos_theta, 4) * std::pow(a * a + tan_theta * tan_theta, 2));
+    float tan_2_theta = 1.f / (cos_theta * cos_theta) - 1.f;
+    float a2 = alpha[0] * alpha[0];
+    return a2 / (PI * std::pow(cos_theta, 4) * std::pow(a2 + tan_2_theta, 2));
   }
   // tips:
   // float getG1(...) {}
@@ -22,11 +22,10 @@ public:
               const Vector2f &alpha) const noexcept {
     // TODO
     // 根据公式即可
-    float a = alpha[0];
-    float theta = std::acos(wh[1]);
-    float theta_h = std::acos(w[1]);
-    float tan_theta_v = std::tan(theta - theta_h);
-    return 2.f / (1.f + std::sqrt(1.f + a * a * tan_theta_v * tan_theta_v));
+    float cos_theta_v = dot(w, wh);
+    float tan_2_theta_v = 1.f / (cos_theta_v * cos_theta_v) - 1.f;
+    float a2 = alpha[0] * alpha[0];
+    return 2.f / (1.f + std::sqrt(1.f + a2 * tan_2_theta_v));
   }
   virtual float getG(const Vector3f &woLocal, const Vector3f &wiLocal,
                      const Vector2f &alpha) const noexcept override {
