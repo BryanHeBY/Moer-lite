@@ -19,7 +19,17 @@ public:
     // tips:
     // 不考虑多重介质，如果光线从真空射入介质，其eta即配置中填写的eta；
     // 如果光线从介质射出，则eta = 1/eta
-    return {0.f};
+
+    Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
+    Vector3f wh = normalize(woLocal + wiLocal);
+    float cos_theta_o = woLocal[1];
+
+    float etaO = woLocal[1] > 0 ? eta : 1.f / eta;
+    Vector3f Fr = getFr(etaO, std::abs(wiLocal[1]));
+    float D = ndf->getD(wh, alpha);
+    float G = ndf->getG(woLocal, wiLocal, alpha);
+    
+    return albedo * D * G * Fr / (4 * cos_theta_o);
   }
 
   virtual BSDFSampleResult sample(const Vector3f &wo,

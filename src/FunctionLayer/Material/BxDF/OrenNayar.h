@@ -16,6 +16,7 @@ public:
     // 3. return Oren-Nayar brdf
 
     Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
+    float cos_theta_i = wiLocal[1];
 
     float sigma_2 = sigma * sigma;
     float A = 1.f - 0.5f * sigma_2 / (sigma_2 + 0.33f);
@@ -30,7 +31,9 @@ public:
     float phi_o = std::atan2(woLocal[2], woLocal[0]);
     float cos_phi = std::cos(phi_i - phi_o);
 
-    return albedo * INV_PI * (A + B * std::max(.0f, cos_phi) * sin_alpha * tan_beta);
+    return albedo * INV_PI * \
+            (A + B * std::max(.0f, cos_phi) * sin_alpha * tan_beta) \
+            * cos_theta_i;
   }
 
   virtual BSDFSampleResult sample(const Vector3f &wo,

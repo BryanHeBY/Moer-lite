@@ -10,15 +10,30 @@ public:
                      const Vector2f &alpha) const noexcept override {
     // TODO
     // 根据公式即可
-    return 0.f;
+    float cos_theta = whLocal[1];
+    float tan_theta = std::sqrt(1.f / (cos_theta * cos_theta) - 1.f);
+    float a = alpha[0];
+    return std::exp(-tan_theta * tan_theta / (a * a)) /
+           (PI * a * a * std::pow(cos_theta, 4));
   }
   // tips:
   // float getG1(...) {}
+  float getG1(const Vector3f &w,
+              const Vector2f &alpha) const noexcept {
+    // TODO
+    // 根据公式即可
+    float a = alpha[0];
+    if(a >= 1.6f) return 1.f;
+    float a2 = a * a;
+    return (3.535f * a + 2.181f * a2) / (1.f + 2.276f * a + 2.577f * a2);
+  }
   virtual float getG(const Vector3f &woLocal, const Vector3f &wiLocal,
                      const Vector2f &alpha) const noexcept override {
     // TODO
     // 根据公式即可
     // tips: return getG1(wo) * getG1(wi);
+    float G = getG1(woLocal, alpha) * getG1(wiLocal, alpha);
+    return G;
   }
   virtual float pdf(const Vector3f &woLocal, const Vector3f &whLocal,
                     const Vector2f &alpha) const noexcept override {

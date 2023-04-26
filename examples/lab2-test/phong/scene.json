@@ -1,6 +1,6 @@
 {
     "output" : {
-      "filename" : "output/phong.hdr"
+      "filename" : "output/phong.png"
     },
     "sampler" : {
       "type" : "independent",

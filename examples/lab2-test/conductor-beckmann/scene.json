@@ -1,6 +1,6 @@
 {
     "output" : {
-      "filename" : "output/conductor-beckmann.hdr"
+      "filename" : "output/conductor-beckmann.png"
     },
     "sampler" : {
       "type" : "independent",

@@ -1,6 +1,6 @@
 {
     "output" : {
-      "filename" : "output/dielectric-ggx.hdr"
+      "filename" : "output/dielectric-ggx.png"
     },
     "sampler" : {
       "type" : "independent",

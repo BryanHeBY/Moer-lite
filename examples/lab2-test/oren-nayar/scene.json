@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "output/oren-nayar.hdr"
+    "filename" : "output/oren-nayar.png"
   },
   "sampler" : {
     "type" : "independent",
