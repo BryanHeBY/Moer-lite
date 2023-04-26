@@ -22,10 +22,10 @@ public:
 
     Vector3f woLocal = toLocal(wo), wiLocal = toLocal(wi);
     Vector3f wh = normalize(woLocal + wiLocal);
-    float cos_theta_o = woLocal[1];
+    float cos_theta_i = wiLocal[1], cos_theta_o = woLocal[1];
 
     float etaO = woLocal[1] > 0 ? eta : 1.f / eta;
-    Vector3f Fr = getFr(etaO, std::abs(wiLocal[1]));
+    Vector3f Fr = getFr(etaO, cos_theta_i);
     float D = ndf->getD(wh, alpha);
     float G = ndf->getG(woLocal, wiLocal, alpha);
     
