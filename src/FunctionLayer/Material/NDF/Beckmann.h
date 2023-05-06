@@ -11,19 +11,18 @@ public:
     // TODO
     // 根据公式即可
     float cos_theta = whLocal[1];
-    float tan_theta = std::sqrt(1.f / (cos_theta * cos_theta) - 1.f);
+    float tan2_theta = 1.f / (cos_theta * cos_theta) - 1.f;
     float a = alpha[0];
-    return std::exp(-tan_theta * tan_theta / (a * a)) /
+    return std::exp(-tan2_theta / (a * a)) /
            (PI * a * a * std::pow(cos_theta, 4));
   }
   // tips:
   // float getG1(...) {}
   float getG1(const Vector3f &w,
-              const Vector3f &wh,
               const Vector2f &alpha) const noexcept {
     // TODO
     // 根据公式即可
-    float cos_theta_v = dot(w, wh);
+    float cos_theta_v = w[1];
     float tan_theta_v = std::sqrt(1.f / (cos_theta_v * cos_theta_v) - 1.f);
     float a = 1 / (alpha[0] * tan_theta_v);
     if(a >= 1.6f) return 1.f;
@@ -35,8 +34,7 @@ public:
     // TODO
     // 根据公式即可
     // tips: return getG1(wo) * getG1(wi);
-    Vector3f wh = normalize(woLocal + wiLocal);
-    float G = getG1(woLocal, wh, alpha) * getG1(wiLocal, wh, alpha);
+    float G = getG1(woLocal, alpha) * getG1(wiLocal, alpha);
     return G;
   }
   virtual float pdf(const Vector3f &woLocal, const Vector3f &whLocal,

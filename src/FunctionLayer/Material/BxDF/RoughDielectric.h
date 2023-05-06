@@ -24,7 +24,8 @@ public:
     Vector3f wh = normalize(woLocal + wiLocal);
     float cos_theta_i = wiLocal[1], cos_theta_o = woLocal[1];
 
-    float etaO = woLocal[1] > 0 ? eta : 1.f / eta;
+    bool pos_i = cos_theta_i > 0, pos_o = cos_theta_o > 0;
+    float etaO = pos_i == pos_o ? eta : 1.f / eta;
     Vector3f Fr = getFr(etaO, cos_theta_i);
     float D = ndf->getD(wh, alpha);
     float G = ndf->getG(woLocal, wiLocal, alpha);
