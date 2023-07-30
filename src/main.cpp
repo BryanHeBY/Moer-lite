@@ -4,6 +4,7 @@
 #include <FunctionLayer/Sampler/Sampler.h>
 #include <FunctionLayer/Scene/Scene.h>
 #include <FunctionLayer/Texture/Mipmap.h>
+#include <FunctionLayer/Denoise/Denoise.h>
 #include <ResourceLayer/Factory.h>
 #include <ResourceLayer/FileUtil.h>
 #include <ResourceLayer/Image.h>
@@ -34,6 +35,7 @@ int main(int argc, char **argv) {
   auto scene = std::make_shared<Scene>(json["scene"]);
   auto integrator = Factory::construct_class<Integrator>(json["integrator"]);
   auto sampler = Factory::construct_class<Sampler>(json["sampler"]);
+  auto denoise = Factory::construct_class<Denoise>(json["denoise"]);
   int spp = sampler->xSamples * sampler->ySamples;
   int width = camera->film->size[0], height = camera->film->size[1];
 
@@ -58,10 +60,19 @@ int main(int argc, char **argv) {
   }
   printProgress(1.f);
 
-  auto end = std::chrono::system_clock::now();
+  auto render_end = std::chrono::system_clock::now();
 
   printf("\nRendering costs %.2fs\n",
-         (std::chrono::duration_cast<std::chrono::milliseconds>(end - start))
+         (std::chrono::duration_cast<std::chrono::milliseconds>(render_end - start))
+                 .count() /
+             1000.f);
+
+  denoise->denoise(*camera->film);
+
+  auto denoise_end = std::chrono::system_clock::now();
+
+  printf("Denoising costs %.2fs\n",
+         (std::chrono::duration_cast<std::chrono::milliseconds>(denoise_end - render_end))
                  .count() /
              1000.f);
 

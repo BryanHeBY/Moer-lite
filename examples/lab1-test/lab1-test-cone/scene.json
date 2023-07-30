@@ -1,6 +1,6 @@
 {
   "output" : {
-    "filename" : "output/cone-normal.png"
+    "filename" : "output/cone-oidn.png"
   },
   "sampler" : {
     "type" : "independent",

@@ -41,8 +41,6 @@ public:
 public:
   Vector2i size;
   static constexpr int channels = 3;
-
-private:
   float *data = nullptr;
 };
 

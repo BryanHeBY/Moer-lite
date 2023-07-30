@@ -21,6 +21,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/target/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/target/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/target/bin)
 
+find_package(OpenImageDenoise REQUIRED)
+
 add_subdirectory(./externals)
 
 add_executable(Moer
@@ -61,6 +63,13 @@ add_executable(Moer
   src/FunctionLayer/Material/Dielectric.cpp
   src/FunctionLayer/Material/OrenNayar.cpp
   src/FunctionLayer/Sampler/IndependentSampler.cpp
+  src/FunctionLayer/Denoise/Denoise.cpp
+  src/FunctionLayer/Denoise/FilterDenoise.cpp
+  src/FunctionLayer/Denoise/MedianFilterDenoise.cpp
+  src/FunctionLayer/Denoise/OpenImageDenoise.cpp
+  src/FunctionLayer/Filter/Filter.cpp
+  src/FunctionLayer/Filter/Gaussian.cpp
+  src/FunctionLayer/Filter/Box.cpp
   src/ResourceLayer/Image.cpp
   src/ResourceLayer/Mesh.cpp
   src/ResourceLayer/FileUtil.cpp
@@ -96,6 +105,7 @@ add_custom_command(TARGET Moer POST_BUILD
 
 target_link_libraries(Moer PUBLIC embree3)
 target_link_libraries(Moer PUBLIC tinyobjloader)
+target_link_libraries(Moer PUBLIC OpenImageDenoise)
 
 if(APPLE)
   execute_process(
