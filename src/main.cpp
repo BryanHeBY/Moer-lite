@@ -13,6 +13,7 @@
 #include <fstream>
 #include <regex>
 #include <stdio.h>
+#include <memory>
 
 #define PBSTR "||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||"
 #define PBWIDTH 60
@@ -35,7 +36,13 @@ int main(int argc, char **argv) {
   auto scene = std::make_shared<Scene>(json["scene"]);
   auto integrator = Factory::construct_class<Integrator>(json["integrator"]);
   auto sampler = Factory::construct_class<Sampler>(json["sampler"]);
-  auto denoise = Factory::construct_class<Denoise>(json["denoise"]);
+  auto denoise = std::shared_ptr<Denoise>(nullptr);
+  if (json.contains("denoise")) {
+    denoise = Factory::construct_class<Denoise>(json["denoise"]);
+  } else {
+    std::cout << "No denoise config found, use default config\n";
+    denoise = std::shared_ptr<Denoise>(new NoneDenoise());
+  }
   int spp = sampler->xSamples * sampler->ySamples;
   int width = camera->film->size[0], height = camera->film->size[1];
 
