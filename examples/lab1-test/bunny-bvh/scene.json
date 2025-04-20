@@ -1,6 +1,6 @@
 {
   "output": {
-    "filename": "bunny-bvh.hdr"
+    "filename": "bunny-bvh.png"
   },
   "sampler": {
     "type": "independent",
